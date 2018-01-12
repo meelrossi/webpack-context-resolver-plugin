@@ -1,0 +1,19 @@
+{
+  "name": "webpack-context-resolver-plugin",
+  "version": "1.0.0",
+  "description": "Plugin to resolve files depending on context",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meelrossi/webpack-context-resolver-plugin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meelrossi/webpack-context-resolver-plugin/issues"
+  },
+  "homepage": "https://github.com/meelrossi/webpack-context-resolver-plugin#readme"
+}
