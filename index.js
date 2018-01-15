@@ -11,29 +11,37 @@ class ContextResolverPlugin {
 
       // check imports before they are resolved
       nmf.plugin("before-resolve", (result, callback) => {
+        if (!this.appContext || !result || result.request[0] !== '.') {
+          return callback(null, result);
+        }
 
         const filePath = path.join(result.context, result.request);
         let contextPath = '';
 
-        if (fs.existsSync(filePath)) {
+        // if the filePath form a Directory then it should import the index file
+        // from that directory.
+        fs.stat(filePath, (error, stats) => {
+          if (error || !stats) {
+            return callback(null, result);
+          }
 
-          // if the filePath form a Directory then it should import the index file
-          // from that directory.
-          if(fs.lstatSync(filePath).isDirectory()) {
+          if(stats.isDirectory()) {
             contextPath = `${filePath}/index.${this.appContext}.js`;
           } else {
             const [fileName, extension] = path.basename(filePath).split('.');
             const dirName = path.dirname(filePath);
             contextPath = `${dirName}/${fileName}.${this.appContext}.${extension}`;
           }
-        }
 
-        // it will override the request only if a file with the specific context exists
-        if (contextPath && fs.existsSync(contextPath)) {
-          result.request = contextPath;
-        }
+          fs.stat(contextPath, (fileError, fileStats) => {
+            if (fileError) return callback(null, result);
 
-        return callback(null, result);
+            if (fileStats.isFile()) {
+              result.request = contextPath;
+            }
+            return callback(null, result);
+          });
+        });
       });
     });
   }
