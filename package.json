@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/meelrossi/webpack-context-resolver-plugin/issues"
   },
-  "homepage": "https://github.com/meelrossi/webpack-context-resolver-plugin#readme"
+  "homepage": "https://github.com/meelrossi/webpack-context-resolver-plugin#readme",
+  "devDependencies": {
+    "eslint": "^4.15.0"
+  }
 }

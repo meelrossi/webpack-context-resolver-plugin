@@ -1,16 +1,18 @@
 const path = require('path');
-var fs = require('fs');
+const fs = require('fs');
 
 class ContextResolverPlugin {
+
   constructor(appContext) {
     this.appContext = appContext;
   }
 
   apply(compiler) {
-    compiler.plugin("normal-module-factory", (nmf) => {
+
+    compiler.plugin('normal-module-factory', (nmf) => {
 
       // check imports before they are resolved
-      nmf.plugin("before-resolve", (result, callback) => {
+      nmf.plugin('before-resolve', (result, callback) => {
         if (!this.appContext || !result || result.request[0] !== '.') {
           return callback(null, result);
         }
