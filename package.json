@@ -18,5 +18,9 @@
   "homepage": "https://github.com/meelrossi/webpack-context-resolver-plugin#readme",
   "devDependencies": {
     "eslint": "^4.15.0"
+  },
+  "peerDependency": {
+    "webpack": "3.8.1",
+    "webpack-dev-server": "2.9.4"
   }
 }
