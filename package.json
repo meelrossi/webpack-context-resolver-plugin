@@ -1,6 +1,6 @@
 {
   "name": "webpack-context-resolver-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin to resolve files depending on context",
   "main": "index.js",
   "scripts": {
