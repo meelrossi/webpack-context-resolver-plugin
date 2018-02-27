@@ -20,21 +20,15 @@ class ContextResolverPlugin {
         let filePath = path.join(result.context, result.request);
         let contextPath = '';
 
-        if (!filePath.includes('.')) {
-          filePath += '.js';
-        }
-
         // if the filePath form a Directory then it should import the index file
         // from that directory.
         fs.stat(filePath, (error, stats) => {
-          if (error || !stats) {
-            return callback(null, result);
-          }
-
-          if(stats.isDirectory()) {
+          if((!error && stats) && stats.isDirectory()) {
             contextPath = `${filePath}/index.${this.appContext}.js`;
           } else {
-            const [fileName, extension] = path.basename(filePath).split('.');
+            const fileParts = path.basename(filePath).split('/').pop().split('.');
+            const fileName = fileParts[0];
+            const extension = fileParts.length < 2 ? 'js' : fileParts.pop();
             const dirName = path.dirname(filePath);
             contextPath = `${dirName}/${fileName}.${this.appContext}.${extension}`;
           }
