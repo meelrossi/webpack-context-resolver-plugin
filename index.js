@@ -17,6 +17,7 @@ class ContextResolverPlugin {
           return callback(null, result);
         }
 
+        const issuer = result.contextInfo.issuer;
         let filePath = path.join(result.context, result.request);
         let contextPath = '';
 
@@ -31,6 +32,10 @@ class ContextResolverPlugin {
             const extension = fileParts.length < 2 ? 'js' : fileParts.pop();
             const dirName = path.dirname(filePath);
             contextPath = `${dirName}/${fileName}.${this.appContext}.${extension}`;
+          }
+
+          if (contextPath === issuer) {
+            return callback(null, result);
           }
 
           fs.stat(contextPath, (fileError, fileStats) => {
