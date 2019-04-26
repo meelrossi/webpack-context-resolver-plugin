@@ -3,8 +3,9 @@ const fs = require('fs');
 
 class ContextResolverPlugin {
 
-  constructor(appContext) {
+  constructor(appContext, contextNodeModules = []) {
     this.appContext = appContext;
+    this.contextNodeModules = contextNodeModules;
   }
 
   apply(compiler) {
@@ -13,12 +14,26 @@ class ContextResolverPlugin {
 
       // check imports before they are resolved
       nmf.plugin('before-resolve', (result, callback) => {
+
         if (!this.appContext || !result || result.request[0] !== '.') {
           return callback(null, result);
         }
 
-        const issuer = result.contextInfo.issuer;
         let filePath = path.join(result.context, result.request);
+
+        if(filePath.includes('node_modules')){
+          let shouldApplyPlugin = false;
+          this.contextNodeModules.forEach(
+            module => {
+              if(filePath.includes(module)) shouldApplyPlugin = true
+            }
+          );
+          if(!shouldApplyPlugin){
+            return callback(null, result);            
+          }
+        }      
+
+        const issuer = result.contextInfo.issuer;
         let contextPath = '';
 
         // if the filePath form a Directory then it should import the index file
@@ -39,13 +54,12 @@ class ContextResolverPlugin {
           }
 
           fs.stat(contextPath, (fileError, fileStats) => {
-            if (fileError) return callback(null, result);
-
-            if (fileStats.isFile()) {
+            if (!fileError && fileStats.isFile()) {
               result.request = contextPath;
             }
             return callback(null, result);
           });
+
         });
       });
     });
